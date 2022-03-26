@@ -2,16 +2,23 @@
     "handler": "Microsoft.Azure.CreateUIDef",
     "version": "0.1.2-preview",
     "parameters": {
-      "basics": [],
+        "config": {
+            "isWizard": false,
+            "basics": {
+                "description": "**SIEM data migration appliance**. Deploys a migration workstation that includes common tools (LightIngest and AzCopy) and deployes target platform (ADX or Azure Blob Storage)"
+            }
+        },
+      "basics": [
+      ],
       "steps": [
         {
-          "name": "deploymentDetails",
-          "label": "Deployment Details",
+          "name": "migrationVM",
+          "label": "Migration VM",
           "subLabel": {
             "preValidation": "Required",
             "postValidation": "Done"
           },
-          "bladeTitle": "Deployment Details",
+          "bladeTitle": "Migration VM",
           "elements": [
             {
               "name": "virtualMachine",
@@ -100,46 +107,201 @@
           ]
         },
         {
-          "name": "identityDetails",
-          "label": "Managed Identity Details",
-          "subLabel": {
-            "preValidation": "Required",
-            "postValidation": "Done"
-          },
-          "bladeTitle": "Managed Identity Details",
-          "elements": [
-            {
-              "name": "identity",
-              "type": "Microsoft.ManagedIdentity.IdentitySelector",
-              "label": "Managed Identity Configuration",
-              "toolTip": {
-                "systemAssignedIdentity": "Enable system assigned identity to grant the resource access to other existing resources.",
-                "userAssignedIdentity": "Add user assigned identities to grant the resource access to other existing resources."
+            "name": "targetPlatform",
+            "label": "Target Platform",
+            "subLabel": {
+              "preValidation": "Required",
+              "postValidation": "Done"
+            },
+            "bladeTitle": "Target Platform",
+            "elements": [
+             {
+                "name": "platform",
+                "type": "Microsoft.Common.OptionsGroup",
+                "label": "Target platform to deploy",
+                "defaultValue": "Value two",
+                "toolTip": "",
+                "constraints": {
+                    "allowedValues": [
+                     {
+                        "label": "Skip",
+                        "value": "skip"
+                     },
+                     {
+                        "label": "Azure Data Explorer",
+                        "value": "adx"
+                     },
+                     {
+                        "label": "Azure Blob Storage",
+                        "value": "blob"
+                     }
+                    ],
+                    "required": true
+                },
+                "visible": true
+             },
+             {
+                "name": "storageAccountName",
+                "type": "Microsoft.Storage.StorageAccountSelector",
+                "label": "Storage account",
+                "toolTip": "",
+                "defaultValue": {
+                  "name": "storageaccount01",
+                  "type": "Premium_LRS"
+                },
+                "constraints": {
+                  "allowedTypes": [],
+                  "excludedTypes": []
+                },
+                "options": {
+                  "hideExisting": false
+                },
+                "visible": "[if(contains(steps('targetPlatform').platform,'blob'), true, false)]"
+             },
+             {  
+                "name": "adxCluster",
+                "type": "Microsoft.Common.TextBox",
+                "label": "ADX cluster name",
+                "defaultValue": "contosoADX",
+                "toolTip": "Use only allowed characters",
+                "placeholder": "",
+                "multiLine": false,
+                "constraints": {
+                    "required": true,
+                    "validations": [
+                        {
+                          "regex": "^[a-z0-9A-Z]{1,30}$",
+                          "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                        }
+                    ]
+                },
+                "visible": "[if(contains(steps('targetPlatform').platform,'adx'), true, false)]"
               },
-              "defaultValue": {
-                "systemAssignedIdentity": "Off"
+              {  
+                "name": "adxDb",
+                "type": "Microsoft.Common.TextBox",
+                "label": "ADX database name",
+                "defaultValue": "contosoDB",
+                "toolTip": "Use only allowed characters",
+                "placeholder": "",
+                "multiLine": false,
+                "constraints": {
+                    "required": true,
+                    "validations": [
+                        {
+                          "regex": "^[a-z0-9A-Z]{1,30}$",
+                          "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                        }
+                    ]
+                },
+                "visible": "[if(contains(steps('targetPlatform').platform,'adx'), true, false)]"
               },
-              "options": {
-                "hideSystemAssignedIdentity": false,
-                "hideUserAssignedIdentity": false
-              },
-              "visible": true
-            }
-          ]
+              {
+                "name": "adxSku",
+                "type": "Microsoft.Common.DropDown",
+                "label": "ADX Cluster SKU",
+                "toolTip": "",
+                "multiselect": false,
+                "filter": true,
+                "filterPlaceholder": "Filter items ...",
+                "multiLine": true,
+                "defaultDescription": "Select ADX Cluster SKU",
+                "constraints": {
+                    "allowedValues": [
+                        {
+                            "label": "(Dev/Test) D11 v2",
+                            "description": "2 vCPU, 80 GB",
+                            "value": "Dev(No SLA)_Standard_D11_v2"
+                        },
+                        {
+                            "label": "(Dev/Test) E2a v4",
+                            "description": "2 vCPU, 18 GB",
+                            "value": "Dev(No SLA)_Standard_E2a_v4"
+                        },
+                        {
+                            "label": "(Storage Optimized) DS13 v2",
+                            "description": "8 vCPU, 1 TB",
+                            "value": "Standard_DS13_v2+1TB_PS"
+                        },
+                        {
+                            "label": "(Storage Optimized) DS13 v2",
+                            "description": "8 vCPU, 2 TB",
+                            "value": "Standard_DS13_v2+2TB_PS"
+                        },
+                        {
+                            "label": "(Storage Optimized) DS14 v2",
+                            "description": "16 vCPU, 3 TB",
+                            "value": "Standard_DS14_v2+3TB_PS"
+                        },
+                        {
+                            "label": "(Storage Optimized) DS14 v2",
+                            "description": "16 vCPU, 4 TB",
+                            "value": "Standard_DS14_v2+4TB_PS"
+                        },
+                        {
+                            "label": "(Compute Optimized) D11 v2",
+                            "description": "2 vCPU, 80 GB",
+                            "value": "Standard_D11_v2"
+                        },
+                        {
+                            "label": "(Compute Optimized) D12 v2",
+                            "description": "4 vCPU, 160 GB",
+                            "value": "Standard_D12_v2"
+                        },
+                        {
+                            "label": "(Compute Optimized) D13 v2",
+                            "description": "8 vCPU, 317 GB",
+                            "value": "Standard_D13_v2"
+                        },
+                        {
+                            "label": "(Compute Optimized) D14 v2",
+                            "description": "16 vCPU, 628 GB",
+                            "value": "Standard_D14_v2"
+                        },
+                        {
+                            "label": "(Heavy Compute) E2a v4",
+                            "description": "16 vCPU, 628 GB",
+                            "value": "Standard_E2a_v4"
+                        },
+                        {
+                            "label": "(Heavy Compute) E4a v4",
+                            "description": "16 vCPU, 628 GB",
+                            "value": "Standard_E4a_v4"
+                        },
+                        {
+                            "label": "(Heavy Compute) E8a v4",
+                            "description": "16 vCPU, 628 GB",
+                            "value": "Standard_E8a_v4"
+                        },
+                        {
+                            "label": "(Heavy Compute) E16a v4",
+                            "description": "16 vCPU, 628 GB",
+                            "value": "Standard_E16a_v4"
+                        }     
+                    ],
+                    "required": true
+                },
+                "visible": "[if(contains(steps('targetPlatform').platform,'dev'), true, false)]"
+               }
+            ] 
         }
       ],
       "outputs": {
         "location": "[location()]",
-        "vmName": "[steps('deploymentDetails').virtualMachine.vmName]",
-        "adminPassword": "[steps('deploymentDetails').virtualMachine.vmPassword.password]",
-        "virtualNetworkName": "[steps('deploymentDetails').vnet.name]",
-        "virtualNetworkNewOrExisting": "[steps('deploymentDetails').vnet.newOrExisting]",
-        "virtualNetworkAddressPrefix": "[first(steps('deploymentDetails').vnet.addressPrefixes)]",
-        "virtualNetworkResourceGroup": "[steps('deploymentDetails').vnet.resourceGroup]",
-        "virtualMachineSize": "[steps('deploymentDetails').VMSize]",
-        "subnetName": "[steps('deploymentDetails').vnet.subnets.subnet1.name]",
-        "subnetAddressPrefix": "[steps('deploymentDetails').vnet.subnets.subnet1.addressPrefix]",
-        "managedIdentity": "[steps('identityDetails').identity]"
+        "vmName": "[steps('migrationVM').virtualMachine.vmName]",
+        "adminPassword": "[steps('migrationVM').virtualMachine.vmPassword.password]",
+        "virtualNetworkName": "[steps('migrationVM').vnet.name]",
+        "virtualNetworkNewOrExisting": "[steps('migrationVM').vnet.newOrExisting]",
+        "virtualNetworkAddressPrefix": "[first(steps('migrationVM').vnet.addressPrefixes)]",
+        "virtualNetworkResourceGroup": "[steps('migrationVM').vnet.resourceGroup]",
+        "virtualMachineSize": "[steps('migrationVM').VMSize]",
+        "subnetName": "[steps('migrationVM').vnet.subnets.subnet1.name]",
+        "subnetAddressPrefix": "[steps('migrationVM').vnet.subnets.subnet1.addressPrefix]",
+        "platform": "[steps('targetPlatform').platform]",
+        "storageAccountName": "[steps('targetPlatform').storageAccountName]",
+        "adxClusterName": "[steps('targetPlatform').adxCluster]",
+        "adxDbName": "[steps('targetPlatform').adxDb]",
+        "adxSku": "[steps('targetPlatform').adxSku]" 
       }
     }
   }
