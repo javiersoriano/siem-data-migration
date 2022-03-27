@@ -141,10 +141,10 @@
                 "visible": true
              },
              {
-                "name": "storageAccountName",
+                "name": "storageAccount",
                 "type": "Microsoft.Storage.StorageAccountSelector",
                 "label": "Storage account",
-                "toolTip": "",
+                "toolTip": "Select a new storage account to be the target of the data migration. For existing storage accounts, skip this step.",
                 "defaultValue": {
                   "name": "storageaccount01",
                   "type": "Premium_LRS"
@@ -154,7 +154,7 @@
                   "excludedTypes": []
                 },
                 "options": {
-                  "hideExisting": false
+                  "hideExisting": true
                 },
                 "visible": "[if(contains(steps('targetPlatform').platform,'blob'), true, false)]"
              },
@@ -199,8 +199,8 @@
               {
                 "name": "adxSku",
                 "type": "Microsoft.Common.DropDown",
-                "label": "ADX Cluster SKU",
-                "toolTip": "",
+                "label": "ADX cluster SKU",
+                "toolTip": "Choose your ADX cluster SKU",
                 "multiselect": false,
                 "filter": true,
                 "filterPlaceholder": "Filter items ...",
@@ -281,8 +281,23 @@
                     ],
                     "required": true
                 },
-                "visible": "[if(contains(steps('targetPlatform').platform,'dev'), true, false)]"
-               }
+                "visible": "[if(contains(steps('targetPlatform').platform,'adx'), true, false)]"
+               },
+               {
+                "name": "adxClusterSize",
+                "type": "Microsoft.Common.Slider",
+                "min": 1,
+                "max": 64,
+                "label": "ADX cluster Size",
+                "subLabel": "Number of nodes",
+                "defaultValue": 2,
+                "showStepMarkers": true,
+                "toolTip": "Pick the number of nodes in the ADX cluster",
+                "constraints": {
+                    "required": true
+                },
+                "visible": "[if(contains(steps('targetPlatform').platform,'adx'), true, false)]"
+            }
             ] 
         }
       ],
@@ -298,10 +313,12 @@
         "subnetName": "[steps('migrationVM').vnet.subnets.subnet1.name]",
         "subnetAddressPrefix": "[steps('migrationVM').vnet.subnets.subnet1.addressPrefix]",
         "platform": "[steps('targetPlatform').platform]",
-        "storageAccountName": "[steps('targetPlatform').storageAccountName]",
+        "storageAccountName": "[steps('targetPlatform').storageAccount.name]",
+        "storageAccountType": "[steps('targetPlatform').storageAccount.type]",
         "adxClusterName": "[steps('targetPlatform').adxCluster]",
         "adxDbName": "[steps('targetPlatform').adxDb]",
-        "adxSku": "[steps('targetPlatform').adxSku]" 
+        "adxSku": "[steps('targetPlatform').adxSku]",
+        "adxClusterSize": "[steps('targetPlatform').adxClusterSize]" 
       }
     }
   }

@@ -10,7 +10,7 @@
     },
     "windowsOSVersion": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "2019-Datacenter",
       "allowedValues": [
         "2008-R2-SP1",
         "2012-Datacenter",
@@ -86,13 +86,47 @@
         "description": "Subnet address prefix"
       }
     },
-    "baseUrl": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "artifactsBaseUrl": "",
-        "description": "URL to acquire other templates"
-      }
+    "platform": {
+        "type": "string",
+        "metadata": {
+            "description": "Target migration platform"
+        }
+    },
+    "storageAccountName": {
+        "type": "string",
+        "metadata": {
+            "description": "Name of the storage account"
+        }
+    },
+    "storageAccountType": {
+        "type": "string",
+        "metadata": {
+            "description": "Type of storage account (Premium or Standard and replication)"
+        }
+    },
+    "adxClusterName": {
+        "type": "string",
+        "metadata": {
+            "description": "Name of the ADX Cluster"
+        }
+    },
+    "adxDbName": {
+        "type": "string",
+        "metadata": {
+            "description": "ADX Database name"
+        }
+    },
+    "adxSku": {
+        "type": "string",
+        "metadata": {
+            "description": "ADX cluster SKU"
+        }
+    },
+    "adxClusterSize": {
+        "type": "int",
+        "metadata": {
+            "description": "ADX cluster size"
+        }
     }
   },
   "variables": {
@@ -227,6 +261,91 @@
           }
         }
       }
-    }
+    },
+    {
+        "apiVersion": "2018-06-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "virtualMachineName/config-app",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
+        ],
+        "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.8",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+                 "fileUris": [
+                    "https://raw.githubusercontent.com/javiersoriano/siem-data-migration/master/installTools.ps1"
+                ],
+                "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File installTools.ps1"
+            }
+        }
+    },
+    {
+        "condition": "[equals(parameters('storageAccountName'),'storage')]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-06-01",
+        "name": "[parameters('storageAccountName')]",
+        "location": "[parameters('location')]",
+        "sku": {
+            "name": "[parameters('storageAccountType')]"
+        },
+        "kind": "StorageV2",
+        "properties": {}
+    },
+    {
+          "condition": "[equals(parameters('platform'),'adx')]",
+          "name": "[parameters('adxClusterName')]",
+          "type": "Microsoft.Kusto/clusters",
+          "sku": {
+              "name": "[parameters('adxSku')]",
+              "tier": "Standard",
+              "capacity": "[parameters('adxClusterSize')]"
+          },
+          "apiVersion": "2020-09-18",
+          "location": "[parameters('location')]",
+          "tags": {
+            "Created By": "GitHub quickstart template"
+          },
+          "properties": {
+              "trustedExternalTenants": [],
+              "optimizedAutoscale": {
+                  "version": 1,
+                  "isEnabled": true,
+                  "minimum": 2,
+                  "maximum": 10
+              },
+              "enableDiskEncryption": false,
+              "enableStreamingIngest": false,
+              "virtualNetworkConfiguration":{
+                  "subnetId": "<subnet resource id>",
+                  "enginePublicIpId": "<Engine service's public IP address resource id>",
+                  "dataManagementPublicIpId": "<Data management's service public IP address resource id>"
+              },
+              "keyVaultProperties":{
+                  "keyName": "<Key name>",
+                  "keyVaultUri": "<Key vault uri>"
+              },
+              "enablePurge": false,
+              "enableDoubleEncryption": false,
+              "engineType": "V3"
+          }
+      },
+      {
+          "condition": "[equals(parameters('platform'),'adx')]",
+          "name": "[concat(parameters('adxClusterName'), '/', parameters('adxDbName'))]",
+          "type": "Microsoft.Kusto/clusters/databases",
+          "apiVersion": "2020-09-18",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+              "[resourceId('Microsoft.Kusto/clusters', parameters('adxClusterName'))]"
+          ],
+          "properties": {
+              "softDeletePeriodInDays": 365,
+              "hotCachePeriodInDays": 31
+          }
+      }
   ]
 }

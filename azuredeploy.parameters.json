@@ -31,6 +31,9 @@
         },
         "subnetAddressPrefix": {
             "value": "" // TODO: Fill in parameter value
+        },
+        "platform": {
+            "value": "" // TODO: Fill in parameter value
         }
     }
 }
