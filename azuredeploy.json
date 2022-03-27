@@ -106,12 +106,14 @@
     },
     "adxClusterName": {
         "type": "string",
+        "defaultValue": "contosoAdx",
         "metadata": {
             "description": "Name of the ADX Cluster"
         }
     },
     "adxDbName": {
         "type": "string",
+        "defaultValue": "contosoDb",
         "metadata": {
             "description": "ADX Database name"
         }
