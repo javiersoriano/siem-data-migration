@@ -120,12 +120,14 @@
     },
     "adxSku": {
         "type": "string",
+        "defaultValue": "Dev(No SLA)_Standard_D11_v2",
         "metadata": {
             "description": "ADX cluster SKU"
         }
     },
     "adxClusterSize": {
         "type": "int",
+        "defaultValue": 2,
         "metadata": {
             "description": "ADX cluster size"
         }
