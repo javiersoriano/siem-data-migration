@@ -170,11 +170,11 @@
         ]
       }
     },
- {
+    {
      "name": "networkSecurityGroup1",
      "type": "Microsoft.Network/networkSecurityGroups",
      "apiVersion": "2020-11-01",
-     "location": "[resourceGroup().location]",
+     "location": "[parameters('location')]",
      "properties": {
          "securityRules": [
              {
@@ -193,7 +193,7 @@
              }
          ]
      }
- },
+    },
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressName')]",
@@ -283,10 +283,17 @@
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
+          ],
+          "networkInterfaceConfigurations": [
+              {
+                  "name": "netConfig",
+                  "properties": {
+                    "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup1')]"
+                    }
+                  }
+              }
           ]
-        },
-        "networkSecurityGroup": {
-            "id": "[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup1')]"
         },
         "diagnosticsProfile": {
           "bootDiagnostics": {
