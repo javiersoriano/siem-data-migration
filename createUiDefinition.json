@@ -97,21 +97,16 @@
               "label": "VM size",
               "toolTip": "The size of virtual machine for VM.",
               "recommendedSizes": [
-                "Standard_D2_v2",
                 "Standard_D2_v3"
               ],
               "constraints": {
-                "allowedSizes": [
-                  "Standard_D2_v2",
-                  "Standard_D2_v3"
-                ],
                 "excludedSizes": []
               },
               "osPlatform": "Windows",
               "imageReference": {
                 "publisher": "MicrosoftWindowsServer",
                 "offer": "WindowsServer",
-                "sku": "2012-R2-Datacenter"
+                "sku": "2019Datacenter"
               }
             }
           ]

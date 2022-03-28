@@ -94,6 +94,7 @@
     },
     "storageAccountName": {
         "type": "string",
+        "defaultValue": "dummyName",
         "metadata": {
             "description": "Name of the storage account"
         }
