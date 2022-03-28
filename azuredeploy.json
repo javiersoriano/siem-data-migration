@@ -269,7 +269,7 @@
     {
         "apiVersion": "2018-06-01",
         "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "virtualMachineName/config-app",
+        "name": "[concat(variables('vmName'),'/downloadApps')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
