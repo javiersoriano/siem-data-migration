@@ -74,7 +74,6 @@
                 "addressPrefixSize": "/16"
               },
               "constraints": {
-                "minAddressPrefixSize": "/24"
               },
               "subnets": {
                 "subnet1": {
@@ -84,9 +83,6 @@
                     "addressPrefixSize": "/24"
                   },
                   "constraints": {
-                    "minAddressPrefixSize": "/29",
-                    "minAddressCount": 8,
-                    "requireContiguousAddresses": true
                   }
                 }
               }
@@ -295,7 +291,7 @@
                 "max": 64,
                 "label": "ADX cluster Size",
                 "subLabel": "Number of nodes",
-                "defaultValue": 2,
+                "defaultValue": 1,
                 "showStepMarkers": true,
                 "toolTip": "Pick the number of nodes in the ADX cluster",
                 "constraints": {
