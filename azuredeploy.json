@@ -335,7 +335,7 @@
           "type": "Microsoft.Kusto/clusters",
           "sku": {
               "name": "[parameters('adxSku')]",
-              "tier": "Standard",
+              "tier": "[if(startsWith(parameters('adxSku'),'Dev'),'Basic','Standard')]",
               "capacity": "[parameters('adxClusterSize')]"
           },
           "apiVersion": "2020-09-18",
