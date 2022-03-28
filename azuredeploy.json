@@ -221,8 +221,11 @@
                 "id": "[variables('subnetId')]"
               }
             }
-          }
+          }  
         ],
+        "networkSecurityGroup": {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup1')]"
+        },
         "enableIPForwarding": true
       },
       "dependsOn": [
@@ -283,16 +286,6 @@
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
-          ],
-          "networkInterfaceConfigurations": [
-              {
-                  "name": "netConfig",
-                  "properties": {
-                    "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup1')]"
-                    }
-                  }
-              }
           ]
         },
         "diagnosticsProfile": {
