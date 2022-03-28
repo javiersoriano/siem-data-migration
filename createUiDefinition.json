@@ -3,7 +3,7 @@
     "version": "0.1.2-preview",
     "parameters": {
         "config": {
-            "isWizard": false,
+            "isWizard": true,
             "basics": {
                 "description": "**SIEM data migration accelerator**. Deploys a migration workstation that includes common tools (LightIngest and AzCopy) and the target platform for the data (ADX or Azure Blob Storage)"
             }

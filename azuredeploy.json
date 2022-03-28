@@ -101,6 +101,7 @@
     },
     "storageAccountType": {
         "type": "string",
+        "defaultValue": "Standard",
         "metadata": {
             "description": "Type of storage account (Premium or Standard and replication)"
         }
