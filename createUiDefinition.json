@@ -18,7 +18,7 @@
             "preValidation": "Required",
             "postValidation": "Done"
           },
-          "bladeTitle": "Migration VM",
+          "bladeTitle": "**Migration VM**. This steps create a Windows 2019 Datacenter VM with AzCopy and LightIngest tools installed.",
           "elements": [
             {
               "name": "virtualMachine",
@@ -32,6 +32,15 @@
                   "constraints": {
                     "required": true
                   }
+                },
+                {
+                    "name": "vmUsername",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Username",
+                    "toolTip": "The administrator username for the VM",
+                    "constraints": {
+                      "required": true
+                    } 
                 },
                 {
                   "name": "vmPassword",
@@ -55,6 +64,7 @@
             {
               "name": "vnet",
               "type": "Microsoft.Network.VirtualNetworkCombo",
+              "toolTip": "A network security group will be created with RDP port open",
               "label": {
                 "virtualNetwork": "Virtual Network",
                 "subnets": "Subnets"
@@ -113,14 +123,14 @@
               "preValidation": "Required",
               "postValidation": "Done"
             },
-            "bladeTitle": "Target Platform",
+            "bladeTitle": "**Target Platform**. This step creates the target platform the logs will be migrated to.",
             "elements": [
              {
                 "name": "platform",
                 "type": "Microsoft.Common.OptionsGroup",
                 "label": "Target platform to deploy",
                 "defaultValue": "Value two",
-                "toolTip": "",
+                "toolTip": "Select the platform where logs will be migrated to. Selecting skip will not create any target platform.",
                 "constraints": {
                     "allowedValues": [
                      {
@@ -304,6 +314,7 @@
       "outputs": {
         "location": "[location()]",
         "vmName": "[steps('migrationVM').virtualMachine.vmName]",
+        "adminUsername": "[steps('migrationVM').virtualMachine.vmUsername]",
         "adminPassword": "[steps('migrationVM').virtualMachine.vmPassword.password]",
         "virtualNetworkName": "[steps('migrationVM').vnet.name]",
         "virtualNetworkNewOrExisting": "[steps('migrationVM').vnet.newOrExisting]",

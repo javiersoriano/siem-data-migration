@@ -168,6 +168,30 @@
         ]
       }
     },
+ {
+     "name": "networkSecurityGroup1",
+     "type": "Microsoft.Network/networkSecurityGroups",
+     "apiVersion": "2020-11-01",
+     "location": "[resourceGroup().location]",
+     "properties": {
+         "securityRules": [
+             {
+                 "name": "nsgRule1",
+                 "properties": {
+                     "description": "RDP",
+                     "protocol": "Tcp",
+                     "sourcePortRange": "*",
+                     "destinationPortRange": "3389",
+                     "sourceAddressPrefix": "*",
+                     "destinationAddressPrefix": "*",
+                     "access": "Allow",
+                     "priority": 100,
+                     "direction": "Inbound"
+                 }
+             }
+         ]
+     }
+ },
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressName')]",
@@ -222,7 +246,8 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', 'networkSecurityGroup1')]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -257,6 +282,9 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
             }
           ]
+        },
+        "networkSecurityGroup": {
+            "id": "[resourceId('Microsoft.Network/networkSecurityGroups','networkSecurityGroup1')]"
         },
         "diagnosticsProfile": {
           "bootDiagnostics": {
