@@ -156,7 +156,7 @@
                 "constraints": {
                     "allowedValues": [
                      {
-                        "label": "Skip",
+                        "label": "Skip (no resources will be deployed by this step)",
                         "value": "skip"
                      },
                      {

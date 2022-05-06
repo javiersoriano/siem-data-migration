@@ -4,7 +4,7 @@ The SIEM data migration accelerator helps you with the setup of the different to
 
 This tool is deployed through an ARM template and performs the following steps:
 
-- Deploys a Windows Virtual Machine that will be used to move the logs from source to destination
+- Deploys a Windows Virtual Machine that will be used to move the logs from source to target
 
 - Downloads and extracts the following tools into the Virtual Machine's desktop:
 
@@ -22,6 +22,7 @@ This tool is deployed through an ARM template and performs the following steps:
 
     + Azure Monitor Logs workspace (enabled with Microsoft Sentinel)
 
+    + Skip. You also have the option to skip this step if your target platform has been already created.
 
 To deploy this tool, just click on the link below and follow the wizard steps:
 
