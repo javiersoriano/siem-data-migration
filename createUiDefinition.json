@@ -5,7 +5,7 @@
         "config": {
             "isWizard": true,
             "basics": {
-                "description": "**SIEM data migration accelerator**. Deploys a migration workstation that includes common tools (LightIngest and AzCopy) and the target platform for the data (ADX or Azure Blob Storage)"
+                "description": "**SIEM data migration accelerator**. Deploys a migration workstation that includes common migration tools (LightIngest, AzCopy and Custom Log ingestion tool) and the target platform for the data (ADX, Azure Monitor Logs or Azure Blob Storage)"
             }
         },
       "basics": [
@@ -18,7 +18,13 @@
             "preValidation": "Required",
             "postValidation": "Done"
           },
-          "bladeTitle": "**Migration VM**. This steps create a Windows 2019 Datacenter VM with AzCopy and LightIngest tools installed.",
+          "options": {
+            "text": "**Migration VM**. This step creates a Windows 2019 Datacenter VM with AzCopy and LightIngest tools installed.",
+            "link": {
+                "label": "Learn more",
+                "uri": "https://aka.ms/siemdatamigration"
+            }
+          },
           "elements": [
             {
               "name": "virtualMachine",
@@ -123,7 +129,13 @@
               "preValidation": "Required",
               "postValidation": "Done"
             },
-            "bladeTitle": "**Target Platform**. This step creates the target platform the logs will be migrated to.",
+            "options": {
+              "text": "**Target Platform**. This step creates the target platform the logs will be migrated to.",
+              "link": {
+                  "label": "Learn more",
+                  "uri": "https://aka.ms/siemdatamigration"
+              }
+            },
             "elements": [
              {
                 "name": "platform",
