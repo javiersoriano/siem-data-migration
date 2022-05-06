@@ -317,8 +317,6 @@
                 "type": "Microsoft.Common.TextBox",
                 "label": "Azure Monitor Logs workspace",
                 "toolTip": "The workspace name should include 4-63 letters or digits",
-                "defaultValue": {
-                },
                 "constraints": {
                   "required": true,
                   "validations": [

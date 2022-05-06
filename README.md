@@ -4,23 +4,23 @@ The SIEM data migration accelerator helps you with the setup of the different to
 
 This tool is deployed through an ARM template and performs the following steps:
 
-1. Deploys a Virtual Machine that will be used to move the logs from source to destination
+- Deploys a Windows Virtual Machine that will be used to move the logs from source to destination
 
-2. Downloads and extracts the following tools:
+- Downloads and extracts the following tools into the Virtual Machine's desktop:
 
-    * [LightIngest](https://docs.microsoft.com/en-us/azure/data-explorer/lightingest) (used to migrate data to ADX)
+    + [LightIngest](https://docs.microsoft.com/en-us/azure/data-explorer/lightingest) (used to migrate data to ADX)
 
-    * [Azure Monitor Custom log ingestion tool](https://github.com/Azure/Azure-Sentinel/tree/master/Tools/CustomLogsIngestion-DCE-DCR) (used to migrate data to Log Analytics)
+    + [Azure Monitor Custom log ingestion tool](https://github.com/Azure/Azure-Sentinel/tree/master/Tools/CustomLogsIngestion-DCE-DCR) (used to migrate data to Log Analytics)
 
-    * [AzCopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10) (used to migrate data to Azure Blob Storage)
+    + [AzCopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10) (used to migrate data to Azure Blob Storage)
 
-3. Deploys the target platform for your historical logs. To choose from:
+- Deploys the target platform for your historical logs. To choose from:
 
-    * Azure Storage account
+    + Azure Storage account
     
-    * Azure Data Explorer cluster and database
+    + Azure Data Explorer cluster and database
 
-    * Azure Monitor Logs workspace (enabled with Microsoft Sentinel)
+    + Azure Monitor Logs workspace (enabled with Microsoft Sentinel)
 
 
 To deploy this tool, just click on the link below and follow the wizard steps:
