@@ -18,18 +18,23 @@
             "preValidation": "Required",
             "postValidation": "Done"
           },
-          "options": {
-            "text": "**Migration VM**. This step creates a Windows 2019 Datacenter VM with AzCopy and LightIngest tools installed.",
-            "link": {
-                "label": "Learn more",
-                "uri": "https://aka.ms/siemdatamigration"
-            }
-          },
           "elements": [
             {
               "name": "virtualMachine",
               "type": "Microsoft.Common.Section",
               "elements": [
+                {
+                  "name": "textBlock1",
+                  "type": "Microsoft.Common.TextBlock",
+                  "visible": true,
+                  "options": {
+                    "text": "This step creates a Windows 2019 Datacenter VM with LightIngest, AzCopy and and Custom Log ingestion tools installed.",
+                    "link": {
+                        "label": "Learn more",
+                        "uri": "https://aka.ms/siemdatamigration"
+                    }
+                  }
+                },
                 {
                   "name": "vmName",
                   "type": "Microsoft.Common.TextBox",
@@ -129,15 +134,20 @@
               "preValidation": "Required",
               "postValidation": "Done"
             },
-            "options": {
-              "text": "**Target Platform**. This step creates the target platform the logs will be migrated to.",
-              "link": {
-                  "label": "Learn more",
-                  "uri": "https://aka.ms/siemdatamigration"
-              }
-            },
             "elements": [
-             {
+              {
+                "name": "textBlock1",
+                "type": "Microsoft.Common.TextBlock",
+                "visible": true,
+                "options": {
+                  "text": "This step creates the target platform the logs will be migrated to (ADX, Azure Monitor Logs or Azure Blob Storage.",
+                  "link": {
+                      "label": "Learn more",
+                      "uri": "https://aka.ms/siemdatamigration"
+                  }
+                }
+              },
+              {
                 "name": "platform",
                 "type": "Microsoft.Common.OptionsGroup",
                 "label": "Target platform to deploy",
