@@ -133,6 +133,12 @@
         "metadata": {
             "description": "ADX cluster size"
         }
+    },
+    "workspaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Microsoft Sentinel workspace"
+      }
     }
   },
   "variables": {
@@ -362,6 +368,30 @@
               "softDeletePeriodInDays": 365,
               "hotCachePeriodInDays": 31
           }
+      },
+      {
+            "condition": "[equals(parameters('platform'),'loganalytics')]",
+            "name": "[parameters('workspaceName')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2020-08-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "retentionInDays": "90",
+                "sku": {
+                    "name": "pergb2018"
+                }
+            }
+      },
+      {
+            "condition": "[equals(parameters('platform'),'loganalytics')]",
+            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/default')]",
+            "type": "Microsoft.OperationalInsights/workspaces/providers/onboardingStates",
+            "apiVersion": "2021-10-01",
+            "properties": {
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+            ]
       }
   ]
 }

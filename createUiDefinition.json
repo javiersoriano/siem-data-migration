@@ -144,6 +144,10 @@
                      {
                         "label": "Azure Blob Storage",
                         "value": "blob"
+                     },
+                     {
+                        "label": "Azure Monitor Logs workspace",
+                        "value": "loganalytics"
                      }
                     ],
                     "required": true
@@ -305,9 +309,27 @@
                 "toolTip": "Pick the number of nodes in the ADX cluster",
                 "constraints": {
                     "required": true
-                },
+                  },
                 "visible": "[if(contains(steps('targetPlatform').platform,'adx'), true, false)]"
-            }
+               },
+               {
+                "name": "workspaceName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Azure Monitor Logs workspace",
+                "toolTip": "The workspace name should include 4-63 letters or digits",
+                "defaultValue": {
+                },
+                "constraints": {
+                  "required": true,
+                  "validations": [
+                    {
+                      "regex": "^[a-z0-9A-Z]{4,63}$",
+                      "message": "The workspace name should include 4-63 letters or digits"
+                    }
+                  ]
+                },
+                "visible": "[if(contains(steps('targetPlatform').platform,'loganalytics'), true, false)]"
+               }
             ] 
         }
       ],
@@ -329,7 +351,8 @@
         "adxClusterName": "[steps('targetPlatform').adxCluster]",
         "adxDbName": "[steps('targetPlatform').adxDb]",
         "adxSku": "[steps('targetPlatform').adxSku]",
-        "adxClusterSize": "[steps('targetPlatform').adxClusterSize]" 
+        "adxClusterSize": "[steps('targetPlatform').adxClusterSize]",
+        "workspaceName": "[steps('targetPlatform').workspaceName]"
       }
     }
   }
