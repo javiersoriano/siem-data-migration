@@ -136,7 +136,7 @@
     },
     "workspaceName": {
       "type": "string",
-      "defaultValue": "[uniqueString(concat(resourceGroup().name,'siemdatamigration'))]",
+      "defaultValue": "[concat('sentinel', uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "Name of the Microsoft Sentinel workspace"
       }
